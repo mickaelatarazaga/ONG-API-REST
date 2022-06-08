@@ -22,7 +22,6 @@ class RegisterNewUserShould extends AuthBasic {
 
     @Test()
     void throw_exception_when_email_already_exist() {
-        request.setEmail("mickaela@gmail.com");
         try {
             userAuthService.register(request);
         } catch (DataAlreadyExistException e) {
