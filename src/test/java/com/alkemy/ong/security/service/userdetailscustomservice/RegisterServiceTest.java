@@ -2,28 +2,26 @@ package com.alkemy.ong.security.service.userdetailscustomservice;
 
 import com.alkemy.ong.controller.utils.RegisterBasic;
 import com.alkemy.ong.exception.DataAlreadyExistException;
+import com.alkemy.ong.security.dto.UserRegisterResponse;
 import com.alkemy.ong.security.model.UserEntity;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
-class RegisterNewUserShould extends RegisterBasic {
+class RegisterServiceTest extends RegisterBasic {
 
     @Test()
-    void throw_exception_when_email_already_exist() {
+    void should_throw_exception_when_email_already_exist() {
         try {
             userAuthService.register(request);
         } catch (DataAlreadyExistException e) {
@@ -33,9 +31,24 @@ class RegisterNewUserShould extends RegisterBasic {
         }
     }
 
+    @Test()
+    void should_convert_user_dto_to_entity() {
+        UserEntity userToConvertToEntity = userMapper.userRegisterRequestDto2User(request);
+        UserEntity userCompare = userRegister;
+        assertEquals(userToConvertToEntity, userCompare);
 
-    //POR EL MOMENTO SE COMENTA HASTA MOCKEAR LA BASE DE DATOS
+    }
+    @Test()
+    void should_convert_user_entity_to_dto() {
+        UserRegisterResponse userEntityToConvertToDto = userMapper.user2UserRegisterResponseDto(userRegister, null);
+        UserRegisterResponse userCompare = response;
+        assertEquals(userEntityToConvertToDto, userCompare);
+    }
+
+
+
 /*
+    POR EL MOMENTO SE COMENTA HASTA MOCKEAR LA BASE DE DATOS
     @Test()
     void save_user_entity_in_data_base_2() throws DataAlreadyExistException {
         Mockito.when(userRepository.findByEmail(request.getEmail()).getEmail()).thenReturn(response.getEmail());
